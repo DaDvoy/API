@@ -75,6 +75,32 @@ func deletePlants(c *gin.Context) {
 	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "plant not found"})
 }
 
+func putPlats(c *gin.Context) {
+	id := c.Param("id")
+	var newData plant
+	if err := c.BindJSON(&newData); err != nil {
+		log.Fatal(err)
+	}
+
+	for _, a := range plants {
+		if a.ID == id {
+			itr, _ := strconv.Atoi(id)
+			if newData.Product != "" {
+				plants[itr-1].Product = newData.Product
+			}
+			if newData.Amount != 0 {
+				plants[itr-1].Amount = newData.Amount
+			}
+			if newData.Price != 0 {
+				plants[itr-1].Price = newData.Price
+			}
+			c.IndentedJSON(http.StatusOK, newData)
+			return
+		}
+	}
+	c.IndentedJSON(http.StatusNotFound, newData)
+}
+
 func main() {
 	router := gin.Default()
 	router.GET("/plants", getPlants)
@@ -82,6 +108,7 @@ func main() {
 	router.GET("/plants/:id", getPlantsByID)
 	router.POST("/plants", postPlants)
 	router.DELETE("/plants/:id", deletePlants)
+	router.PUT("/plants/:id", putPlats)
 
 	router.Run("localhost:8080")
 
