@@ -16,12 +16,6 @@ func New() *Server {
 	return &Server{}
 }
 
-var plants = []postgres.Plant{
-	{ID: "1", Product: "Syngonium green lime", Amount: "10", Price: 29.99},
-	{ID: "2", Product: "Alocasia dragon skin", Amount: "10", Price: 39.99},
-	{ID: "3", Product: "Monstera Alba", Amount: "10", Price: 50.00},
-}
-
 func (s *Server) getPlants(c *gin.Context) {
 	// Context.IndentedJSON to serialize the struct into JSON and add it to the response
 	ch := make(chan *postgres.Plant)
