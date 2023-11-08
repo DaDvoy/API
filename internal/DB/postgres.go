@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"database/sql"
+	"fmt"
 	_ "github.com/lib/pq"
 	"log"
 )
@@ -16,8 +17,7 @@ type config struct {
 }
 
 type DB struct {
-	db  *sql.DB
-	err error
+	db *sql.DB
 }
 
 type Plant struct {
@@ -27,18 +27,17 @@ type Plant struct {
 	Price   float64 `json:"price"`
 }
 
-func Init() *DB {
-	return &DB{}
-}
+//func Init() *DB {
+//	return &DB{}
+//}
 
-func ConnectDB(_db *DB) error {
-	_db.db, _db.err = sql.Open("postgres", "user=postgres password=postgres host=localhost dbname=postgres sslmode=disable")
-	if _db.err != nil {
-		log.Fatalf("Error: Unable to connect to database: %v", _db.err)
-		return _db.err
+func New() (*DB, error) {
+	db, err := sql.Open("postgres", "user=postgres password=postgres host=localhost dbname=postgres sslmode=disable")
+	if err != nil {
+		log.Fatalf("Error: Unable to connect to database: %v", err)
+		return nil, fmt.Errorf("$s: %w")
 	}
-	return nil
-	//defer _db.db.Close()
+	return &DB{db: db}, nil
 }
 
 func CloseDB(_db *DB) error {
