@@ -27,10 +27,6 @@ type Plant struct {
 	Price   float64 `json:"price"`
 }
 
-//func Init() *DB {
-//	return &DB{}
-//}
-
 func New() (*DB, error) {
 	db, err := sql.Open("postgres", "user=postgres password=postgres host=localhost dbname=postgres sslmode=disable")
 	if err != nil {

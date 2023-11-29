@@ -45,7 +45,7 @@ func main() {
 	logs.Debug("debug messages are enabled")
 	db, err := postgres.New()
 	if err != nil {
-		logs.Error("Failed to init database", sl.Err(err)) // TODO: If I want not use sl, need to delete it
+		logs.Error("Failed to init database", sl.Err(err))
 		os.Exit(1)
 	}
 	if err := postgres.CreateTable(db); err != nil {

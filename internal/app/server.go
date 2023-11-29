@@ -22,31 +22,16 @@ func New(logs *slog.Logger, conf *config.Config) *Server {
 }
 
 func (s *Server) RequestIdMiddleware(c *gin.Context) {
-	//return func(c *gin.Context) {
 	uuidStr := uuid.NewV4().String()
-	c.Writer.Header().Set("X-Request-Id", uuidStr) // TODO: there are not X-Request-Id in response from server when we do a get request
+	c.Writer.Header().Set("X-Request-ID", uuidStr)
 
 	c.Next()
-	//defer func() { // TODO: is necessary add this UUID to log?
-	//	s.logs.Info(
-	//		"", slog.Attr{Key: "UUID", Value: slog.StringValue(uuidStr)},
-	//	)
-	//}()
-	//}
+	defer func() {
+		s.logs.Info(
+			"", slog.Attr{Key: "UUID", Value: slog.StringValue(uuidStr)},
+		)
+	}()
 }
-
-// EXAMPLE: wrapper for middleware ?
-//func wrapper(f func(c *gin.Context) (string, error)) gin.HandlerFunc {
-//
-//	return func(c *gin.Context) {
-//		_, err := f(c)
-//		if err != nil {
-//			c.JSON(503, gin.H{"status": err})
-//			return
-//		}
-//		c.JSON(200, gin.H{"status": "OK"})
-//	}
-//}
 
 func (s *Server) getPlants(c *gin.Context) {
 	// Context.IndentedJSON to serialize the struct into JSON and add it to the response
@@ -142,7 +127,6 @@ func (s *Server) Start(_db *postgres.DB) error {
 	router.DELETE("/plants/:id", s.deletePlants)
 	router.PUT("/plants/:id", s.putPlants)
 
-	//router.Run("localhost:8080")
 	srvListen := &http.Server{
 		Addr:         s.cfg.HTTPServer.Address,
 		Handler:      router,

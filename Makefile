@@ -2,8 +2,7 @@ BINARY_NAME = api
 
 .PHONY: build all clean
 
-#.DEFAULT_GOAL := build
-#SRCS		=  ${shell find ./internal -name "*.go"} main.go
+export CONFIG_PATH = ./config/local.yaml
 
 all:	build
 		./$(BINARY_NAME)
@@ -13,3 +12,6 @@ build:
 
 clean:
 		rm $(BINARY_NAME)
+
+docker:
+		docker run --name some-postgres -p 5432:5432 -e POSTGRES_PASSWORD=postgres -d postgres:latest
